@@ -668,6 +668,7 @@ typedef NS_ENUM(NSUInteger, YMURLSessionTaskProtocolState) {
     if (request.ym_connectToHost) {
         [self.easyHandle setConnectToHost:request.ym_connectToHost port:request.ym_connectToPort];
     }
+    [self.easyHandle setSSLVerifypeer:request.ym_skipSSLVerify];
     [self.easyHandle setSessionConfig:self.session.configuration];
     [self.easyHandle setAllowedProtocolsToHTTPAndHTTPS];
     [self.easyHandle setPreferredReceiveBufferSize:NSIntegerMax];

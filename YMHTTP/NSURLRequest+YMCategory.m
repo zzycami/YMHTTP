@@ -77,10 +77,21 @@ NS_INLINE void ym_swizzleMethods(Class class, SEL origSel, SEL swizSel) {
     return [value integerValue];
 }
 
+- (void) setYm_skipSSLVerify:(BOOL)ym_skipSSLVerify {
+    NSNumber *value = [NSNumber numberWithBool:ym_skipSSLVerify];
+    objc_setAssociatedObject(self, @selector(ym_skipSSLVerify), value, OBJC_ASSOCIATION_COPY);
+}
+
+- (BOOL) ym_skipSSLVerify {
+    NSNumber *value = objc_getAssociatedObject(self, _cmd);
+    return [value boolValue];
+}
+
 - (id)ym_copyWithZone:(NSZone *)zone {
     NSURLRequest *r = [self ym_copyWithZone:zone];
     r.ym_connectToHost = self.ym_connectToHost;
     r.ym_connectToPort = self.ym_connectToPort;
+    r.ym_skipSSLVerify = self.ym_skipSSLVerify;
     return r;
 }
 
@@ -88,6 +99,7 @@ NS_INLINE void ym_swizzleMethods(Class class, SEL origSel, SEL swizSel) {
     NSURLRequest *r = [self ym_mutableCopyWithZone:zone];
     r.ym_connectToHost = self.ym_connectToHost;
     r.ym_connectToPort = self.ym_connectToPort;
+    r.ym_skipSSLVerify = self.ym_skipSSLVerify;
     return r;
 }
 

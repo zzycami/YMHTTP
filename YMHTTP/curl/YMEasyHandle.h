@@ -82,6 +82,9 @@ typedef void *YMURLSessionEasyHandle;
 /// - SeeAlso: https://curl.haxx.se/libcurl/c/CURLOPT_NOSIGNAL.html
 - (void)setSkipAllSignalHandling:(BOOL)flag;
 
+/// Skip SSL verify
+- (void)setSSLVerifypeer:(BOOL)flag;
+
 /// Set error buffer for error messages
 /// - SeeAlso: https://curl.haxx.se/libcurl/c/CURLOPT_ERRORBUFFER.html
 - (void)setErrorBuffer:(nullable char *)buffer;

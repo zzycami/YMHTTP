@@ -146,6 +146,11 @@ typedef NS_OPTIONS(NSUInteger, YMEasyHandlePauseState) {
     YM_ECODE(curl_easy_setopt(self.rawHandle, CURLOPT_NOSIGNAL, flag ? 1 : 0));
 }
 
+- (void)setSSLVerifypeer:(BOOL)flag {
+    YM_ECODE(curl_easy_setopt(self.rawHandle, CURLOPT_SSL_VERIFYPEER, flag ? 1 : 0));
+    YM_ECODE(curl_easy_setopt(self.rawHandle, CURLOPT_SSL_VERIFYHOST, flag ? 1 : 0));
+}
+
 - (void)setErrorBuffer:(char *)buffer {
     if (buffer != NULL) {
         _errorBuffer = buffer;

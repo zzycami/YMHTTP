@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, readonly, copy) NSString *ym_connectToHost;
 @property (readonly) NSInteger ym_connectToPort;
+@property BOOL ym_skipSSLVerify;
 
 @end
 
@@ -27,6 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nullable, copy) NSString *ym_connectToHost;
 @property NSInteger ym_connectToPort;
+@property BOOL ym_skipSSLVerify;
 
 @end
 

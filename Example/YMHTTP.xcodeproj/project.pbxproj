@@ -575,6 +575,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C93A632C7F80069A9526D5D5 /* Pods-YMHTTP_Example.debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					arm64,
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = BT3QU6S37N;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -584,6 +588,7 @@
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zymxxxs.YMHTTPExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_VERSION = 4.0;
 				WRAPPER_EXTENSION = app;
 			};
@@ -593,6 +598,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9B92362F77DF9D617C514746 /* Pods-YMHTTP_Example.release.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					arm64,
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = BT3QU6S37N;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -602,6 +611,7 @@
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = com.zymxxxs.YMHTTPExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_VERSION = 4.0;
 				WRAPPER_EXTENSION = app;
 			};
