@@ -105,10 +105,10 @@ size_t curl_read_function(void *ptr, size_t size, size_t nmemb, void *userdata) 
 }
 
 - (void) startRequest: (NSURLRequest*) request originalUrl:(NSURL*) url host:(NSString*) host{
-    self.request = [self setCookiesOnReqeust:request];
     self.originalUrl = url;
-    self.requestHost = host;
-    self.requestUrl = self.request.URL;
+    self.requestHost = self.originalUrl.host;
+    self.requestUrl = request.URL;
+    self.request = [self setCookiesOnReqeust:request];
     self.request = [self bindRequestHost:self.request];
     [self startRequest];
 }
@@ -150,7 +150,14 @@ size_t curl_read_function(void *ptr, size_t size, size_t nmemb, void *userdata) 
     curl_easy_setopt(_curl, CURLOPT_HTTPHEADER, headerList); // no headers sent
 //    curl_easy_setopt(_curl, CURLOPT_COOKIE)
     curl_easy_setopt(_curl, CURLOPT_CUSTOMREQUEST,nil);
-    curl_easy_setopt(_curl, CURLOPT_HTTPGET, 1L); // use HTTP GET method
+    if (![self.request.HTTPMethod isEqualToString:@"GET"]) {
+        curl_easy_setopt(_curl, CURLOPT_CUSTOMREQUEST, self.request.HTTPMethod.UTF8String);
+        NSString *body = [[NSString alloc] initWithData:self.request.HTTPBody encoding:NSUTF8StringEncoding];
+        NSLog(@"body:%@", body);
+        curl_easy_setopt(_curl, CURLOPT_POSTFIELDS, [body UTF8String]);
+    }else {
+        curl_easy_setopt(_curl, CURLOPT_HTTPGET, 1L); // use HTTP GET method
+    }
     
     curl_easy_setopt(_curl, CURLOPT_URL, [url.absoluteString UTF8String]);
     
@@ -199,7 +206,7 @@ size_t curl_read_function(void *ptr, size_t size, size_t nmemb, void *userdata) 
             }else {
                 [self startRequest:modifiedRequest originalUrl:url host:url.host];
             }
-        }else if (http_code == 200) {
+        }else {
             if (self.delegate != nil && [self.delegate respondsToSelector:@selector(LoginManager:didReceiveResponse:receivedData:)]) {
                 [self.delegate LoginManager:self didReceiveResponse:self.response receivedData:_dataReceived];
             }
@@ -213,7 +220,9 @@ size_t curl_read_function(void *ptr, size_t size, size_t nmemb, void *userdata) 
 - (NSURLRequest *)setCookiesOnReqeust:(NSURLRequest *)request {
     NSMutableURLRequest *r = [request mutableCopy];
     if (self.cookieStorage && request.URL) {
-        NSArray *cookies = [_cookieStorage cookiesForURL:request.URL];
+        NSString *urlString = [NSString stringWithFormat:@"https://%@", self.requestHost];
+        NSURL* url = [NSURL URLWithString:urlString];
+        NSArray *cookies = [_cookieStorage cookiesForURL:url];
         if (cookies && cookies.count) {
             NSDictionary *cookiesHeaderFields = [NSHTTPCookie requestHeaderFieldsWithCookies:cookies];
             NSString *cookieValue = cookiesHeaderFields[@"Cookie"];
@@ -285,11 +294,14 @@ size_t curl_read_function(void *ptr, size_t size, size_t nmemb, void *userdata) 
             } else {
                 _headerFields[key] = value;
             }
+            if ([key isEqualToString:@"set-cookie"]) {
+                NSString *urlString = [NSString stringWithFormat:@"https://%@", self.requestHost];
+                NSURL* url = [NSURL URLWithString:urlString];
+                NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:@{@"Set-Cookie" : value} forURL:url];
+                if ([cookies count] == 0) return;
+                [self.cookieStorage setCookies:cookies forURL:self.originalUrl mainDocumentURL:nil];
+            }
             
-            NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:@{key : value} forURL:self.originalUrl];
-            NSLog(@"%d", [cookies count]);
-            if ([cookies count] == 0) return;
-            [self.cookieStorage setCookies:cookies forURL:self.originalUrl mainDocumentURL:nil];
         }
     }
 }
