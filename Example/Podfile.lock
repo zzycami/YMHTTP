@@ -1,7 +1,7 @@
 PODS:
-  - YMHTTP (1.0.0):
-    - YMHTTP/libcurl (= 1.0.0)
-  - YMHTTP/libcurl (1.0.0)
+  - YMHTTP (1.0.1):
+    - YMHTTP/libcurl (= 1.0.1)
+  - YMHTTP/libcurl (1.0.1)
 
 DEPENDENCIES:
   - YMHTTP (from `../`)
@@ -11,7 +11,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  YMHTTP: 623e13a05229bb9a3e20727bdadf9f2a4dbc3615
+  YMHTTP: acd9c189aaacb9b877ae1937ea597868f6a8c279
 
 PODFILE CHECKSUM: 8ad634c421ecba2f8ed89cfc1b575c535293f61d
 

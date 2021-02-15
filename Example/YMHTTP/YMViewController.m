@@ -9,7 +9,7 @@
 #import "YMViewController.h"
 #import <YMHTTP/YMHTTP.h>
 
-@interface YMViewController ()
+@interface YMViewController ()<YMURLSessionDataDelegate>
 
 @property (nonatomic, strong) NSURLSession *us;
 @property (nonatomic, strong) YMURLSession *yus;
@@ -19,51 +19,39 @@
 
 @implementation YMViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad{
     [super viewDidLoad];
-
-//
-//    NSURLRequest *r1 = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://httpbin.org/get?a=b"]];
-//    dispatch_group_t group2 = dispatch_group_create();
-//    CFAbsoluteTime startYMURLSession = CFAbsoluteTimeGetCurrent();
-//    for (int i=0; i<10; i++) {
-//        dispatch_group_enter(group2);
-//        [[[YMURLSession sharedSession] taskWithRequest:r1
-//                                     completionHandler:^(NSData * _Nullable data, NSHTTPURLResponse * _Nullable response, NSError * _Nullable error) {
-//            if (error) {
-//                NSLog(@"YMURLSession 失败了");
-//            }
-//            dispatch_group_leave(group2);
-//        }] resume];
-//    }
-//
-//    dispatch_group_notify(group2, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        CFAbsoluteTime endYMURLSession = CFAbsoluteTimeGetCurrent();
-//        NSLog(@"YMURLSession 总共花费时间：%@", @(endYMURLSession -  startYMURLSession));
-//    });
-//
-//
-//    NSURLRequest *r = [NSURLRequest requestWithURL:[NSURL URLWithString:@"http://httpbin.org/get"]];
-//    dispatch_group_t group1 = dispatch_group_create();
-//    CFAbsoluteTime startNSURLSession = CFAbsoluteTimeGetCurrent();
-//    for (int i=0; i<10; i++) {
-//        dispatch_group_enter(group1);
-//        [[[NSURLSession sharedSession] dataTaskWithRequest:r
-//                                         completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-//            if (error) {
-//                NSLog(@"NSURLSession 失败了");
-//            }
-//            dispatch_group_leave(group1);
-//
-//        }] resume];
-//    }
-//
-//    dispatch_group_notify(group1, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        CFAbsoluteTime endNSURLSession = CFAbsoluteTimeGetCurrent();
-//        NSLog(@"NSURLSession 总共花费时间：%@", @(endNSURLSession -  startNSURLSession));
-//    });
+    ////https://app-api.pixiv.net/web/v1/login?code_challenge=M4_JWzwE25zio6wx9bvxC7vX9ObTEdLlZWPFI1Rdwl8&code_challenge_method=S256&client=pixiv-android
+    NSURL* url = [[NSURL alloc] initWithString:@"https://210.140.131.222/web/v1/login?code_challenge=M4_JWzwE25zio6wx9bvxC7vX9ObTEdLlZWPFI1Rdwl8&code_challenge_method=S256&client=pixiv-android"];
+    NSMutableURLRequest* request = [[NSMutableURLRequest alloc] initWithURL:url];
+    [request setValue:@"app-api.pixiv.net" forHTTPHeaderField:@"Host"];
+    YMURLSession* session = [YMURLSession sessionWithConfiguration:[YMURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:nil];
+//    YMURLSessionTask* task = [session taskWithRequest:request];
+    YMURLSessionTask* task = [session taskWithRequest:request completionHandler:^(NSData * _Nullable data, NSHTTPURLResponse * _Nullable response, NSError * _Nullable error) {
+        NSString* result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSLog(@"%@", result);
+    }];
+    [task resume];
 }
 
+- (void)YMURLSession:(YMURLSession *)session
+                          task:(YMURLSessionTask *)task
+    willPerformHTTPRedirection:(NSHTTPURLResponse *)response
+                    newRequest:(NSURLRequest *)request
+   completionHandler:(void (^)(NSURLRequest *_Nullable))completionHandler {
+    NSString* location = [[response allHeaderFields] valueForKey:@"Location"];
+    NSLog(@"%@", location);
+}
 
+- (void)YMURLSession:(YMURLSession *)session
+                  task:(YMURLSessionTask *)task
+    didReceiveResponse:(NSHTTPURLResponse *)response
+   completionHandler:(void (^)(YMURLSessionResponseDisposition disposition))completionHandler {
+    
+}
+
+- (void)YMURLSession:(YMURLSession *)session task:(YMURLSessionTask *)task didReceiveData:(NSData *)data {
+    NSString* result = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    NSLog(@"%@", result);
+}
 @end

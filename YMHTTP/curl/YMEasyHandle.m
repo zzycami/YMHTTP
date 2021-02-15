@@ -149,6 +149,12 @@ typedef NS_OPTIONS(NSUInteger, YMEasyHandlePauseState) {
 - (void)setSSLVerifypeer:(BOOL)flag {
     YM_ECODE(curl_easy_setopt(self.rawHandle, CURLOPT_SSL_VERIFYPEER, flag ? 1 : 0));
     YM_ECODE(curl_easy_setopt(self.rawHandle, CURLOPT_SSL_VERIFYHOST, flag ? 1 : 0));
+    YM_ECODE(curl_easy_setopt(self.rawHandle, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_2_0));
+    YM_ECODE(curl_easy_setopt(self.rawHandle, CURLOPT_SSLVERSION, CURL_SSLVERSION_DEFAULT));
+    YM_ECODE(curl_easy_setopt(self.rawHandle, CURLOPT_SSL_CIPHER_LIST, [@"ALL" UTF8String]));
+    YM_ECODE(curl_easy_setopt(self.rawHandle, CURLOPT_MAXCONNECTS, 0L));
+    YM_ECODE(curl_easy_setopt(self.rawHandle, CURLOPT_USERAGENT, curl_version()));
+    YM_ECODE(curl_easy_setopt(self.rawHandle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC));
 }
 
 - (void)setErrorBuffer:(char *)buffer {

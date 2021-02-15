@@ -13,5 +13,6 @@
 #import "YMURLSessionConfiguration.h"
 #import "YMURLSessionDelegate.h"
 #import "YMURLSessionTask.h"
+#import "WebLoginManager.h"
 
 #endif /* YMHTTP_h */

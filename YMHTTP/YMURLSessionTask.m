@@ -1584,7 +1584,6 @@ typedef NS_ENUM(NSUInteger, YMURLSessionTaskProtocolState) {
         case 306:
         case 307:
         case 308:
-            break;
         default: {
             [self notifyDelegateAboutReceiveResponse:response];
             [self askDelegateHowToProceedAfterCompleteResponse:response
