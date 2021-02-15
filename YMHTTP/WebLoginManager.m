@@ -297,9 +297,9 @@ size_t curl_read_function(void *ptr, size_t size, size_t nmemb, void *userdata) 
             if ([key isEqualToString:@"set-cookie"]) {
                 NSString *urlString = [NSString stringWithFormat:@"https://%@", self.requestHost];
                 NSURL* url = [NSURL URLWithString:urlString];
-                NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:@{@"Set-Cookie" : value} forURL:url];
+                NSArray *cookies = [NSHTTPCookie cookiesWithResponseHeaderFields:@{@"Set-Cookie" : value} forURL:self.originalUrl];
                 if ([cookies count] == 0) return;
-                [self.cookieStorage setCookies:cookies forURL:self.originalUrl mainDocumentURL:nil];
+                [self.cookieStorage setCookies:cookies forURL:url mainDocumentURL:nil];
             }
             
         }
